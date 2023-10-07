@@ -144,6 +144,18 @@ const columns: ColumnsType<DataType> = [
     title: "Name",
     dataIndex: "name",
     key: "name",
+    defaultSortOrder: "descend",
+    // @ts-ignore
+    sorter: (a, b) => {
+      const aName = a.name?.toLowerCase() || "";
+      const bName = b.name?.toLowerCase() || "";
+
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+
+      return 0;
+    },
+
     render: (text) => <a>{text || "-"}</a>,
   },
   {
@@ -179,6 +191,9 @@ const columns: ColumnsType<DataType> = [
     title: "Supply",
     dataIndex: "supply",
     key: "supply",
+    defaultSortOrder: "descend",
+    // @ts-ignore
+    sorter: (a, b) => a.supply - b.supply,
     render: (text) => (
       <a
         style={{
@@ -288,11 +303,15 @@ function App() {
       // );
 
       const client = await CosmWasmClient.connect(
-        NODE_RPC_URLS["osmosis-testnet"]
+        // NODE_RPC_URLS["osmosis-testnet"]
+        // NODE_RPC_URLS["osmosis-testnet"]
+        "https://rpc-falcron.pion-1.ntrn.tech:443"
       );
 
       const data = (await client.queryContractSmart(
-        CONTRACT_ADDRESSES["osmosis-testnet"],
+        // CONTRACT_ADDRESSES["osmosis-testnet"],
+        // CONTRACT_ADDRESSES["osmosis-testnet"],
+        "neutron10v5u2pqce59j0sm6nzv6a42qfus2rdcsxr5y2g27qawulqdss57qjsta8y",
         {
           get_assets_by_chain: {
             chain_name: chain,
@@ -355,6 +374,8 @@ function App() {
     setfilters(value);
   };
 
+  console.error(data);
+
   return (
     <div className={styles.app}>
       <Header />
@@ -385,7 +406,7 @@ function App() {
           value={limit.toString()}
           onChange={handleChange2}
           style={{ width: 120 }}
-          options={[10, 20, 50].map((i) => {
+          options={[10, 20, 50, 100].map((i) => {
             return {
               value: i,
               label: i,
@@ -401,7 +422,7 @@ function App() {
             placeholder="Select asset type"
             // defaultValue={[]}
             onChange={handleChange3}
-            options={["sdk.coin", "ics20"].map((item) => {
+            options={["ics20", "sdk.coin", "pool"].map((item) => {
               return {
                 value: item,
                 label: item,
@@ -441,7 +462,9 @@ function App() {
         "Loading..."
       )}
 
-      <footer>footer</footer>
+      <footer>
+        2023 Hackmos <a href="">GitHub</a>
+      </footer>
     </div>
   );
 }

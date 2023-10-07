@@ -1,5 +1,6 @@
 .app {
-  background-color: burlywood;
+  // background-color: burlywood;
+  background-color: #f0f2f4;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -19,8 +20,17 @@
 
 footer {
   margin-top: auto;
-  min-height: 100px;
-  background-color: rebeccapurple;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  color: white;
+  padding-top: 30px;
+  min-height: 50px;
+  background-color: #31b125;
+
+  a {
+    margin-top: 10px;
+    display: block;
+  }
 }
 
 .info {
