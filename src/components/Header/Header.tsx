@@ -5,7 +5,7 @@ function Header() {
   return (
     <header className={styles.header}>
       <img src="/cosmos-atom-logo.png" alt="" />
-      <h3>Interchain Cosmos data</h3>
+      <h3>Interchain Oracle</h3>
     </header>
   );
 }

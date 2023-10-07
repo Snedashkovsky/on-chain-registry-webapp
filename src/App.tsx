@@ -451,6 +451,7 @@ function App() {
           })} */}
 
           <Table
+            bordered
             columns={columns}
             dataSource={data.filter((item: any) =>
               filters.length > 0 ? filters.includes(item.type) : true
@@ -459,7 +460,14 @@ function App() {
           />
         </div>
       ) : (
-        "Loading..."
+        <p
+          style={{
+            textAlign: "center",
+          }}
+        >
+          {" "}
+          Loading...
+        </p>
       )}
 
       <footer>
