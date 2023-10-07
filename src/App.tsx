@@ -204,6 +204,23 @@ const columns: ColumnsType<DataType> = [
       </a>
     ),
   },
+  {
+    title: "Total supply",
+    dataIndex: "total",
+    key: "total",
+    defaultSortOrder: "descend",
+    // @ts-ignore
+    sorter: (a, b) => a.total - b.total,
+    render: (text) => (
+      <a
+        style={{
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text == 0 ? "-" : Number(text).toLocaleString().replaceAll(",", " ")}
+      </a>
+    ),
+  },
 ];
 
 const NODE_RPC_URLS = {
@@ -336,6 +353,8 @@ function App() {
           base: asset.base,
           supply: asset.supply,
           type: asset.type_asset,
+          // @ts-ignore
+          total: asset.traces?.[0]?.counterparty?.base_supply || 0,
         };
       });
 
