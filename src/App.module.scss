@@ -8,13 +8,13 @@
 
 .filters {
   display: flex;
+  padding: 20px 10%;
   justify-content: flex-end;
   gap: 10px;
-  padding: 20px 10%;
 }
 
 .main {
-  padding: 30px 10% 50px;
+  padding: 0 10% 50px;
   overflow-x: auto;
 }
 
@@ -34,8 +34,9 @@ footer {
 }
 
 .info {
-  justify-content: center;
   gap: 20px;
   display: flex;
+  justify-content: flex-end;
+  padding-right: 7px;
   margin-bottom: 30px;
 }
