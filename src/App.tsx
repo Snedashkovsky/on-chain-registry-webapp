@@ -303,7 +303,7 @@ function App() {
   // const [client, setClient] = useState<StargateClient>();
   const [data, setData] = useState<any>();
 
-  const [chain, setChain] = useState("cosmoshub");
+  const [chain, setChain] = useState("neutron");
   const [limit, setLimit] = useState(50);
   const [error, seterror] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -354,7 +354,9 @@ function App() {
           supply: asset.supply,
           type: asset.type_asset,
           // @ts-ignore
-          total: asset.traces?.[0]?.counterparty?.base_supply || 0,
+          total:
+            asset.traces?.[asset.traces.length - 1]?.counterparty
+              ?.base_supply || 0,
         };
       });
 
