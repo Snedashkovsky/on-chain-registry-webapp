@@ -1,6 +1,6 @@
 .app {
   // background-color: burlywood;
-  background-color: #c7d6e6;
+  background-color: grayscale($color: #e1e1e1);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -25,10 +25,12 @@ footer {
   color: white;
   padding-top: 30px;
   min-height: 50px;
-  background-color: #31b125;
+  // background-color: #31b125;
+  background-color: #2a2c29;
 
   a {
     margin-top: 10px;
+    color: white;
     display: block;
   }
 }
