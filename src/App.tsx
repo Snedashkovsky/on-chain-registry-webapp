@@ -287,7 +287,9 @@ function App() {
   const [data, setData] = useState<any>();
 
   const [chain, setChain] = useState("cosmoshub");
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(400);
+  const [error, seterror] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [filters, setfilters] = useState<any>([]);
 
@@ -301,6 +303,8 @@ function App() {
       //   // "https://rpc.bostrom.cybernode.ai:443"
       //   "https://osmosis-testnet-rpc.polkachu.com:443"
       // );
+
+      setLoading(true);
 
       const client = await CosmWasmClient.connect(
         // NODE_RPC_URLS["osmosis-testnet"]
@@ -335,7 +339,7 @@ function App() {
         };
       });
 
-      console.log(data);
+      // console.log(data);
 
       setData(nData);
 
@@ -346,7 +350,10 @@ function App() {
       // );
     } catch (error) {
       console.error("Error connecting to Stargate:", error);
+      // @ts-ignore
+      seterror(error);
     }
+    setLoading(false);
   };
 
   const handleChange = (value: string) => {
@@ -374,7 +381,7 @@ function App() {
     setfilters(value);
   };
 
-  console.error(data);
+  console.log(data);
 
   return (
     <div className={styles.app}>
@@ -406,7 +413,7 @@ function App() {
           value={limit.toString()}
           onChange={handleChange2}
           style={{ width: 120 }}
-          options={[10, 20, 50, 100].map((i) => {
+          options={[10, 20, 50, 100, 300, 450].map((i) => {
             return {
               value: i,
               label: i,
@@ -459,7 +466,7 @@ function App() {
             pagination={false}
           />
         </div>
-      ) : (
+      ) : loading ? (
         <p
           style={{
             textAlign: "center",
@@ -468,10 +475,42 @@ function App() {
           {" "}
           Loading...
         </p>
+      ) : error ? (
+        <p
+          style={{
+            textAlign: "center",
+          }}
+        >
+          {" "}
+          Error loading data
+          {/* @ts-ignore */}
+          {JSON.stringify(error)}
+        </p>
+      ) : data?.length === 0 ? (
+        <p
+          style={{
+            textAlign: "center",
+          }}
+        >
+          {" "}
+          No data for this chain
+        </p>
+      ) : (
+        <p
+          style={{
+            textAlign: "center",
+          }}
+        >
+          {" "}
+          Select chain
+        </p>
       )}
 
       <footer>
-        2023 Hackmos <a href="">GitHub</a>
+        2023 Hackmos{" "}
+        <a href="https://github.com/Snedashkovsky/hackmos" target="_blank">
+          GitHub
+        </a>
       </footer>
     </div>
   );
