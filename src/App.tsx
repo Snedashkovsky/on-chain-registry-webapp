@@ -287,7 +287,7 @@ function App() {
   const [data, setData] = useState<any>();
 
   const [chain, setChain] = useState("cosmoshub");
-  const [limit, setLimit] = useState(400);
+  const [limit, setLimit] = useState(50);
   const [error, seterror] = useState(null);
   const [loading, setLoading] = useState(false);
 
