@@ -223,22 +223,22 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const NODE_RPC_URLS = {
+const NODE_RPC_URLS: {[key: string]: any} = {
   bostrom: "https://rpc.bostrom.cybernode.ai:443",
   localbostrom: "http://localhost:26657",
   "osmosis-testnet": "https://osmosis-testnet-rpc.polkachu.com:443",
+  "neutron-testnet":"https://rpc-falcron.pion-1.ntrn.tech:443",
 };
-// const NODE_LCD_URLS = {
+// const NODE_LCD_URLS: {[key: string]: any} = {
 //   bostrom: "https://lcd.bostrom.cybernode.ai",
 //   localbostrom: "http://localhost:1317",
 //   "osmosis-testnet": "https://osmosis-testnet-api.polkachu.com",
 // };
-const CONTRACT_ADDRESSES = {
+const CONTRACT_ADDRESSES: {[key: string]: any} = {
   bostrom: "bostrom1w33tanvadg6fw04suylew9akcagcwngmkvns476wwu40fpq36pms92re6u",
-  localbostrom:
-    "bostrom1l2rs0hxzfy343z8n6punpj9gwzrsq644nzzls6dql52jjj2nxncqjn5vg3",
-  "osmosis-testnet":
-    "osmo1nwesd2xe6cnvtpqd29xg7qeznlm65x02lfjfg20wlvkdze20hcxsftxtzz",
+  localbostrom: "bostrom1l2rs0hxzfy343z8n6punpj9gwzrsq644nzzls6dql52jjj2nxncqjn5vg3",
+  "osmosis-testnet": "osmo1nwesd2xe6cnvtpqd29xg7qeznlm65x02lfjfg20wlvkdze20hcxsftxtzz",
+  "neutron-testnet": "neutron10v5u2pqce59j0sm6nzv6a42qfus2rdcsxr5y2g27qawulqdss57qjsta8y",
 };
 
 interface Trace {
@@ -303,8 +303,9 @@ function App() {
   // const [client, setClient] = useState<StargateClient>();
   const [data, setData] = useState<any>();
 
-  const [chain, setChain] = useState("neutron");
-  const [limit, setLimit] = useState(50);
+  const [chain_source] = useState("bostrom")
+  const [chain, setChain] = useState("cosmoshub");
+  const [limit, setLimit] = useState(750);
   const [error, seterror] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -324,15 +325,11 @@ function App() {
       setLoading(true);
 
       const client = await CosmWasmClient.connect(
-        // NODE_RPC_URLS["osmosis-testnet"]
-        // NODE_RPC_URLS["osmosis-testnet"]
-        "https://rpc-falcron.pion-1.ntrn.tech:443"
+        NODE_RPC_URLS[chain_source]
       );
 
       const data = (await client.queryContractSmart(
-        // CONTRACT_ADDRESSES["osmosis-testnet"],
-        // CONTRACT_ADDRESSES["osmosis-testnet"],
-        "neutron10v5u2pqce59j0sm6nzv6a42qfus2rdcsxr5y2g27qawulqdss57qjsta8y",
+        CONTRACT_ADDRESSES[chain_source],
         {
           get_assets_by_chain: {
             chain_name: chain,
@@ -434,7 +431,7 @@ function App() {
           value={limit.toString()}
           onChange={handleChange2}
           style={{ width: 120 }}
-          options={[10, 20, 50, 100, 300, 450].map((i) => {
+          options={[10, 20, 50, 100, 300, 500, 750, 1000].map((i) => {
             return {
               value: i,
               label: i,
@@ -450,10 +447,10 @@ function App() {
             placeholder="Select asset type"
             // defaultValue={[]}
             onChange={handleChange3}
-            options={["ics20", "sdk.coin", "pool"].map((item) => {
+            options={[["sdk.coin", "Native"], ["ics20", "IBC"], ["pool", "LP Tokens"], ["cw20", "CW20"], ["erc20", "ERC20"], ["factory", "Token Factory"]].map((item) => {
               return {
-                value: item,
-                label: item,
+                value: item[0],
+                label: item[1],
               };
             })}
           />
@@ -528,9 +525,9 @@ function App() {
       )}
 
       <footer>
-        2023 Hackmos{" "}
-        <a href="https://github.com/Snedashkovsky/hackmos" target="_blank">
-          GitHub
+        {/*2023 {" "}*/}
+        <a href="https://github.com/Snedashkovsky/on-chain-registry" target="_blank">
+          On-Chain Registry
         </a>
       </footer>
     </div>
