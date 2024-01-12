@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./App.module.scss";
-// import { StargateClient } from "@cosmjs/stargate";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import Header from "./components/Header/Header";
 import { Select, Space, Table, Tooltip } from "antd";
@@ -156,24 +155,68 @@ const columns: ColumnsType<DataType> = [
       return 0;
     },
 
-    render: (text) => <a>{text || "-"}</a>,
+    render: (text) => <p>{text || "-"}</p>,
   },
   {
     title: "Symbol",
     dataIndex: "symbol",
     key: "symbol",
-    render: (text) => <a>{text || "-"}</a>,
+    sorter: (a, b) => {
+      const aName = a.name?.toLowerCase() || "";
+      const bName = b.name?.toLowerCase() || "";
+
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+
+      return 0;
+    },
+    render: (text) => <p>{text || "-"}</p>,
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    sorter: (a, b) => {
+      const aName = a.name?.toLowerCase() || "";
+      const bName = b.name?.toLowerCase() || "";
+
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+
+      return 0;
+    },
+    render: (text) => <p>{text || "-"}</p>,
+  },
+  {
+    title: "Type",
+    dataIndex: "type",
+    key: "type",
+    sorter: (a, b) => {
+      const aName = a.name?.toLowerCase() || "";
+      const bName = b.name?.toLowerCase() || "";
+
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+
+      return 0;
+    },
+    render: (text) => <p>{text || "-"}</p>,
   },
   {
     title: "Denom",
     dataIndex: "base",
     key: "denom",
+    sorter: (a, b) => {
+      const aName = a.name?.toLowerCase() || "";
+      const bName = b.name?.toLowerCase() || "";
+
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+
+      return 0;
+    },
     render: (text) =>
-      text.includes("ibc/") || text.includes("cosmosvaloper") ? (
-        <Tooltip title={text}>
-          <a href="">ibc...</a>
-        </Tooltip>
-      ) : (
+      (
         <a
           style={
             {
@@ -186,40 +229,6 @@ const columns: ColumnsType<DataType> = [
           {text}
         </a>
       ),
-  },
-  {
-    title: "Supply",
-    dataIndex: "supply",
-    key: "supply",
-    defaultSortOrder: "descend",
-    // @ts-ignore
-    sorter: (a, b) => a.supply - b.supply,
-    render: (text) => (
-      <a
-        style={{
-          whiteSpace: "nowrap",
-        }}
-      >
-        {Number(text).toLocaleString().replaceAll(",", " ")}
-      </a>
-    ),
-  },
-  {
-    title: "Total supply",
-    dataIndex: "total",
-    key: "total",
-    defaultSortOrder: "descend",
-    // @ts-ignore
-    sorter: (a, b) => a.total - b.total,
-    render: (text) => (
-      <a
-        style={{
-          whiteSpace: "nowrap",
-        }}
-      >
-        {text == 0 ? "-" : Number(text).toLocaleString().replaceAll(",", " ")}
-      </a>
-    ),
   },
 ];
 
@@ -250,7 +259,6 @@ interface Trace {
     channel_id: string;
     chain_name: string;
     contract: string | null;
-    base_supply: string;
   };
   chain: {
     port: string | null;
@@ -264,7 +272,6 @@ interface IBCInfo {
   source_channel: string;
   dst_channel: string;
   source_denom: string;
-  base_supply: string | null;
 }
 
 interface Asset {
@@ -272,7 +279,6 @@ interface Asset {
   chain_id: string;
   base: string;
   type_asset: string;
-  supply: string;
   description: string | null;
   denom_units:
     | {
@@ -300,11 +306,10 @@ interface AssetData {
 }
 
 function App() {
-  // const [client, setClient] = useState<StargateClient>();
   const [data, setData] = useState<any>();
 
   const [chain_source] = useState("bostrom")
-  const [chain, setChain] = useState("cosmoshub");
+  const [chain, setChain] = useState("bostrom");
   const [limit, setLimit] = useState(750);
   const [error, seterror] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -312,16 +317,11 @@ function App() {
   const [filters, setfilters] = useState<any>([]);
 
   useEffect(() => {
-    connectStargate();
+    connectContract();
   }, [chain, limit]);
 
-  const connectStargate = async () => {
+  const connectContract = async () => {
     try {
-      // const stargateClient = await StargateClient.connect(
-      //   // "https://rpc.bostrom.cybernode.ai:443"
-      //   "https://osmosis-testnet-rpc.polkachu.com:443"
-      // );
-
       setLoading(true);
 
       const client = await CosmWasmClient.connect(
@@ -347,27 +347,17 @@ function App() {
           key: asset.base,
           name: asset.name,
           symbol: asset.symbol || asset.display,
+          description: asset.description,
           base: asset.base,
-          supply: asset.supply,
           type: asset.type_asset,
           // @ts-ignore
-          total:
-            asset.traces?.[asset.traces.length - 1]?.counterparty
-              ?.base_supply || 0,
         };
       });
 
-      // console.log(data);
-
       setData(nData);
 
-      // setClient(stargateClient);
-      // console.log(
-      //   "CosmJS Stargate Connected @",
-      //   await stargateClient.getChainId()
-      // );
     } catch (error) {
-      console.error("Error connecting to Stargate:", error);
+      console.error("Error connecting to Contract:", error);
       // @ts-ignore
       seterror(error);
     }
@@ -419,11 +409,6 @@ function App() {
                 label: chain.toUpperCase(),
               };
             })
-
-            // { value: "osmo", label: "Osmosis testnet" },
-            // { value: "bostrom", label: "Bostrom" },
-            // { value: "Yiminghe", label: "yiminghe" },
-            // { value: "disabled", label: "Disabled", disabled: true },
           }
         />
 
