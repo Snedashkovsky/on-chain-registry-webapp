@@ -4,8 +4,8 @@ import styles from "./Header.module.scss";
 function Header() {
   return (
     <header className={styles.header}>
-      <img src="/cosmos-atom-logo.png" alt="" />
-      <h3>Interchain Oracle</h3>
+      <img src="/ocr-logo.png" alt="" />
+      <h3>On-Chain Registry</h3>
     </header>
   );
 }

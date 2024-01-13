@@ -1,7 +1,8 @@
 {
-  "name": "interchain-queries-frontend",
+  "name": "ocr-frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.31.1",
     "@testing-library/jest-dom": "^5.17.0",
@@ -22,7 +23,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test-react": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "react-app-rewired build && ipfs add -r build"
   },
   "eslintConfig": {
     "extends": [
