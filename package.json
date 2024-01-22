@@ -24,7 +24,7 @@
     "build": "react-app-rewired build",
     "test-react": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "deploy": "react-app-rewired build && ipfs add -r build"
+    "deploy": "react-app-rewired build && export HASH=$(ipfs add -r build -Q) && echo https://cloudflare-ipfs.com/ipfs/${HASH} && echo http://localhost:8080/ipfs/${HASH}"
   },
   "eslintConfig": {
     "extends": [
